@@ -31,7 +31,7 @@ async def async_setup_entry(
     _LOGGER.debug("Создано %d сенсоров Dom.ru", len(sensors))
 
 
-class DomruBaseSensor(CoordinatorEntity):
+class DomruBaseSensor(CoordinatorEntity, SensorEntity):
     """Базовый класс для сенсоров Dom.ru с общим device_info."""
 
     def __init__(self, coordinator, agreement_number: str):
@@ -49,17 +49,17 @@ class DomruBaseSensor(CoordinatorEntity):
         """Возвращает AgreementInfo из координатора."""
         return self.coordinator.data.get(self.agreement_number)
 
-class DomruAgreementBalanceSensor(DomruBaseSensor, SensorEntity):
+class DomruAgreementBalanceSensor(DomruBaseSensor):
     """Сенсор баланса договора."""
 
-    def __init__(self, coordinator, agreement: AgreementInfo):
-        super().__init__(coordinator, agreement.number, agreement.address.full)
+    def __init__(self, coordinator, agreement_number: str):
+        super().__init__(coordinator, agreement_number)
         self._attr_name = "Баланс"
-        self._attr_unique_id = f"{DOMAIN}_{agreement.number}_balance"
+        self._attr_unique_id = f"{DOMAIN}_{agreement_number}_balance"
 
     @property
     def native_value(self):
-        agreement_info = self.coordinator.data.get(self.agreement_number)
+        agreement_info:AgreementInfo = self.coordinator.data.get(self.agreement_number)
         if agreement_info and agreement_info.payment:
             return agreement_info.payment.balance
         return None
@@ -68,24 +68,24 @@ class DomruAgreementBalanceSensor(DomruBaseSensor, SensorEntity):
     def native_unit_of_measurement(self):
         return "₽"
 
-class DomruAgreementTariffSensor(DomruBaseSensor, SensorEntity):
+class DomruAgreementTariffSensor(DomruBaseSensor):
     """Сенсор тарифа и платёжных данных."""
 
-    def __init__(self, coordinator, agreement: AgreementInfo):
-        super().__init__(coordinator, agreement.number, agreement.address.full)
+    def __init__(self, coordinator, agreement_number: str):
+        super().__init__(coordinator, agreement_number)
         self._attr_name = "Тариф"
-        self._attr_unique_id = f"{DOMAIN}_{agreement.number}_tariff"
+        self._attr_unique_id = f"{DOMAIN}_{agreement_number}_tariff"
 
     @property
     def native_value(self):
-        agreement_info = self.coordinator.data.get(self.agreement_number)
+        agreement_info:AgreementInfo = self.coordinator.data.get(self.agreement_number)
         if agreement_info and agreement_info.products:
             return agreement_info.products.tariff_name
         return "Неизвестно"
 
     @property
     def extra_state_attributes(self):
-        agreement_info = self.coordinator.data.get(self.agreement_number)
+        agreement_info:AgreementInfo = self.coordinator.data.get(self.agreement_number)
         if agreement_info and agreement_info.agreement_info.payment and agreement_info.agreement_info.products:
             return {
                 "tariff_price": getattr(agreement_info.products, "tariff_price", None),
