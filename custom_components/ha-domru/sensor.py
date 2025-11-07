@@ -91,7 +91,7 @@ class DomruAgreementTariffSensor(DomruBaseSensor):
     @property
     def extra_state_attributes(self):
         agreement_info:AgreementInfo = self.coordinator.data.get(self.agreement_number)
-        if agreement_info and agreement_info.agreement_info.payment and agreement_info.agreement_info.products:
+        if agreement_info and agreement_info.payment and agreement_info.products:
             return {
                 "tariff_price": getattr(agreement_info.products, "tariff_price", None),
                 "pay_sum": getattr(agreement_info.payment, "pay_sum", None),
