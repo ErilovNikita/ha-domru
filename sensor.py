@@ -7,6 +7,8 @@ from homeassistant.components.sensor import SensorEntity  # type: ignore[import]
 from homeassistant.helpers.update_coordinator import CoordinatorEntity  # type: ignore[import]
 from homeassistant.helpers.entity_platform import AddEntitiesCallback  # type: ignore[import]
 
+from domru_client.types import AgreementInfo# type: ignore[import]
+
 from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
@@ -50,12 +52,12 @@ class DomruAgreementBalanceSensor(CoordinatorEntity, SensorEntity):
             client = self.coordinator.client
 
             # Выполняем вызов API в executor
-            agreement_info = await self.coordinator.hass.async_add_executor_job(
+            agreement_info:AgreementInfo = await self.coordinator.hass.async_add_executor_job(
                 client.get_agreement_info, device_id
             )
 
-            if agreement_info and agreement_info.balance:
-                self._balance = agreement_info.balance
+            if agreement_info and agreement_info.payment:
+                self._balance = agreement_info.payment.balance
             else:
                 self._balance = None
 
