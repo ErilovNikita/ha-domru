@@ -2,14 +2,14 @@ from __future__ import annotations
 import logging
 from datetime import timedelta
 
-from homeassistant.core import HomeAssistant
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from homeassistant.core import HomeAssistant # type: ignore[import]
+from homeassistant.config_entries import ConfigEntry # type: ignore[import]
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed # type: ignore[import]
 
 from .const import DOMAIN
-from domru_client import DomRuClient
-from domru_client.types import AuthTokens
-from domru_client.exceptions import AuthenticationError, DataFetchError
+from domru_client import DomRuClient # type: ignore[import]
+from domru_client.types import AuthTokens # type: ignore[import]
+from domru_client.exceptions import AuthenticationError, DataFetchError # type: ignore[import]
 
 _LOGGER = logging.getLogger(__name__)
 
