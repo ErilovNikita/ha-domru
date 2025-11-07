@@ -52,11 +52,13 @@ class DomruAgreementBalanceSensor(CoordinatorEntity, SensorEntity):
             client = self.coordinator.client
 
             # Выполняем вызов API в executor
+            _LOGGER.debug("client.get_agreement_info(\"%s\")", agreement_number)
             agreement_info:AgreementInfo = await self.coordinator.hass.async_add_executor_job(
                 client.get_agreement_info, agreement_number
             )
 
             if agreement_info and agreement_info.payment:
+                _LOGGER.debug("Обновление баланса по договору %s: %s", agreement_number, str(agreement_info.payment.balance))
                 self._balance = agreement_info.payment.balance
             else:
                 self._balance = None

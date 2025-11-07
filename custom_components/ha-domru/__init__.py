@@ -19,6 +19,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     phone = entry.data["phone"]
     auth_dict = entry.data["auth_tokens"]
     auth_tokens = AuthTokens(**auth_dict)
+    _LOGGER.debug("Настройка интеграции Dom.ru для %s", phone)
+    _LOGGER.debug("Auth tokens: %s", auth_tokens)
 
     # Создание клиента в executor (синхронный код)
     client: DomRuClient = await hass.async_add_executor_job(DomRuClient, phone, auth_tokens)
