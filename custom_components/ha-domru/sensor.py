@@ -7,7 +7,7 @@ from homeassistant.components.sensor import SensorEntity
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from domru_client.types import AgreementInfo, Agreement
+from domru_client.types import AgreementInfo
 
 from .const import DOMAIN
 
@@ -19,57 +19,82 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Создание сенсоров Dom.ru для каждого договора как отдельного устройства."""
+
     coordinator = hass.data[DOMAIN][entry.entry_id]["coordinator"]
-
     sensors = []
-    for agreement in coordinator.data:
-        sensors.append(DomruAgreementBalanceSensor(coordinator, agreement))
-    
+
+    for agreement_number, agreement_info in coordinator.data.items():
+        sensors.append(DomruAgreementBalanceSensor(coordinator, agreement_number))
+        sensors.append(DomruAgreementTariffSensor(coordinator, agreement_number))
+
     async_add_entities(sensors, update_before_add=True)
+    _LOGGER.debug("Создано %d сенсоров Dom.ru", len(sensors))
 
 
-class DomruAgreementBalanceSensor(CoordinatorEntity, SensorEntity):
-    """Сенсор баланса для одного договора (одно устройство)."""
+class DomruBaseSensor(CoordinatorEntity):
+    """Базовый класс для сенсоров Dom.ru с общим device_info."""
 
-    def __init__(self, coordinator, agreement:Agreement):
-        """Инициализация сенсора для договора."""
+    def __init__(self, coordinator, agreement_number: str):
         super().__init__(coordinator)
-        self.agreement = agreement
-        self._attr_name = f"Баланс {agreement.number}"
-        self._attr_unique_id = f"{agreement.number}_balance"
+        self.agreement_number = agreement_number
         self._attr_device_info = {
-            "identifiers": {(DOMAIN, agreement.number)},
-            "name": agreement.address.full,
+            "identifiers": {(DOMAIN, agreement_number)},
+            "name": f"Договор {agreement_number}",
             "manufacturer": "Dom.ru",
             "model": "Договор",
         }
-        self._balance: float | None = None
 
-    async def async_update(self):
-        """Асинхронное обновление баланса договора."""
-        try:
-            agreement_number = self.agreement.number
-            client = self.coordinator.client
+    @property
+    def agreement_info(self):
+        """Возвращает AgreementInfo из координатора."""
+        return self.coordinator.data.get(self.agreement_number)
 
-            # Выполняем вызов API в executor
-            _LOGGER.debug("client.get_agreement_info(\"%s\")", agreement_number)
-            agreement_info:AgreementInfo = await self.coordinator.hass.async_add_executor_job(
-                client.get_agreement_info, agreement_number
-            )
+class DomruAgreementBalanceSensor(DomruBaseSensor, SensorEntity):
+    """Сенсор баланса договора."""
 
-            if agreement_info and agreement_info.payment:
-                _LOGGER.debug("Обновление баланса по договору %s: %s", agreement_number, str(agreement_info.payment.balance))
-                self._balance = agreement_info.payment.balance
-            else:
-                self._balance = None
-
-        except Exception as e:
-            _LOGGER.exception("Ошибка обновления баланса для договора %s: %s", self.agreement.number, e)
-            self._balance = None
+    def __init__(self, coordinator, agreement: AgreementInfo):
+        super().__init__(coordinator, agreement.number, agreement.address.full)
+        self._attr_name = "Баланс"
+        self._attr_unique_id = f"{DOMAIN}_{agreement.number}_balance"
 
     @property
     def native_value(self):
-        return self._balance
+        agreement_info = self.coordinator.data.get(self.agreement_number)
+        if agreement_info and agreement_info.payment:
+            return agreement_info.payment.balance
+        return None
+
+    @property
+    def native_unit_of_measurement(self):
+        return "₽"
+
+class DomruAgreementTariffSensor(DomruBaseSensor, SensorEntity):
+    """Сенсор тарифа и платёжных данных."""
+
+    def __init__(self, coordinator, agreement: AgreementInfo):
+        super().__init__(coordinator, agreement.number, agreement.address.full)
+        self._attr_name = "Тариф"
+        self._attr_unique_id = f"{DOMAIN}_{agreement.number}_tariff"
+
+    @property
+    def native_value(self):
+        agreement_info = self.coordinator.data.get(self.agreement_number)
+        if agreement_info and agreement_info.products:
+            return agreement_info.products.tariff_name
+        return "Неизвестно"
+
+    @property
+    def extra_state_attributes(self):
+        agreement_info = self.coordinator.data.get(self.agreement_number)
+        if agreement_info and agreement_info.agreement_info.payment and agreement_info.agreement_info.products:
+            return {
+                "tariff_price": getattr(agreement_info.products, "tariff_price", None),
+                "pay_sum": getattr(agreement_info.payment, "pay_sum", None),
+                "pay_charges_sum": getattr(agreement_info.payment, "pay_charges_sum", None),
+                "pay_text_short": getattr(agreement_info.payment, "pay_text_Short", None),
+            }
+        else:
+            return {}
 
     @property
     def native_unit_of_measurement(self):

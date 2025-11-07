@@ -56,17 +56,28 @@ class DomruDataUpdateCoordinator(DataUpdateCoordinator):
             hass,
             _LOGGER,
             name="Dom.ru Data Coordinator",
-            update_interval=timedelta(minutes=5),  # обновление каждые 5 минут
+            update_interval=timedelta(minutes=1),
         )
         self.client = client
-        self.data = {}
 
     async def _async_update_data(self):
-        """Обновление данных с сервера Dom.ru (через executor)."""
+        """Обновление данных с сервера Dom.ru."""
         try:
-            agreements:list[Agreement] = await self.hass.async_add_executor_job(self.client.get_agreements)
-            # Для примера просто сохраняем договоры
-            return agreements
+            agreements = await self.hass.async_add_executor_job(self.client.get_agreements)
+            _LOGGER.debug("Получено %s договоров", str(len(agreements)))
+
+            # Загружаем подробности по каждому договору
+            detailed = {}
+            for agreement in agreements:
+                agreement_info = await self.hass.async_add_executor_job(
+                    self.client.get_agreement_info,
+                    agreement.number
+                )
+                detailed[agreement.number] = agreement_info
+                _LOGGER.debug("Данные по договору %s обновлены", agreement.number)
+
+            return detailed
+
         except (AuthenticationError, DataFetchError) as err:
             raise UpdateFailed(f"Ошибка при получении данных: {err}") from err
         except Exception as err:
