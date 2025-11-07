@@ -75,6 +75,9 @@ class DomruAgreementTariffSensor(DomruBaseSensor):
         super().__init__(coordinator, agreement_number)
         self._attr_name = "Тариф"
         self._attr_unique_id = f"{DOMAIN}_{agreement_number}_tariff"
+        self._attr_native_unit_of_measurement = None
+        self._attr_state_class = None
+        self._attr_device_class = None
 
     @property
     def native_value(self):
@@ -95,7 +98,3 @@ class DomruAgreementTariffSensor(DomruBaseSensor):
             }
         else:
             return {}
-
-    @property
-    def native_unit_of_measurement(self):
-        return "₽"
