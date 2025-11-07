@@ -8,7 +8,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 
 from .const import DOMAIN
 from domru_client import DomRuClient
-from domru_client.types import AuthTokens
+from domru_client.types import AuthTokens, Agreement
 from domru_client.exceptions import AuthenticationError, DataFetchError
 
 _LOGGER = logging.getLogger(__name__)
@@ -62,7 +62,7 @@ class DomruDataUpdateCoordinator(DataUpdateCoordinator):
     async def _async_update_data(self):
         """Обновление данных с сервера Dom.ru (через executor)."""
         try:
-            agreements = await self.hass.async_add_executor_job(self.client.get_agreements)
+            agreements:list[Agreement] = await self.hass.async_add_executor_job(self.client.get_agreements)
             # Для примера просто сохраняем договоры
             return agreements
         except (AuthenticationError, DataFetchError) as err:

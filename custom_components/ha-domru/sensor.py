@@ -7,7 +7,7 @@ from homeassistant.components.sensor import SensorEntity
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from domru_client.types import AgreementInfo
+from domru_client.types import AgreementInfo, Agreement
 
 from .const import DOMAIN
 
@@ -31,7 +31,7 @@ async def async_setup_entry(
 class DomruAgreementBalanceSensor(CoordinatorEntity, SensorEntity):
     """Сенсор баланса для одного договора (одно устройство)."""
 
-    def __init__(self, coordinator, agreement):
+    def __init__(self, coordinator, agreement:Agreement):
         """Инициализация сенсора для договора."""
         super().__init__(coordinator)
         self.agreement = agreement
@@ -48,12 +48,12 @@ class DomruAgreementBalanceSensor(CoordinatorEntity, SensorEntity):
     async def async_update(self):
         """Асинхронное обновление баланса договора."""
         try:
-            device_id = list(self._attr_device_info["identifiers"])[0][1]
+            agreement_number = self.agreement.number
             client = self.coordinator.client
 
             # Выполняем вызов API в executor
             agreement_info:AgreementInfo = await self.coordinator.hass.async_add_executor_job(
-                client.get_agreement_info, device_id
+                client.get_agreement_info, agreement_number
             )
 
             if agreement_info and agreement_info.payment:
