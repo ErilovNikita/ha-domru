@@ -1,13 +1,13 @@
 from __future__ import annotations
 import logging
 
-from homeassistant.core import HomeAssistant  # type: ignore[import]
-from homeassistant.config_entries import ConfigEntry  # type: ignore[import]
-from homeassistant.components.sensor import SensorEntity  # type: ignore[import]
-from homeassistant.helpers.update_coordinator import CoordinatorEntity  # type: ignore[import]
-from homeassistant.helpers.entity_platform import AddEntitiesCallback  # type: ignore[import]
+from homeassistant.core import HomeAssistant
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.components.sensor import SensorEntity
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from domru_client.types import AgreementInfo# type: ignore[import]
+from domru_client.types import AgreementInfo
 
 from .const import DOMAIN
 

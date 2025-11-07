@@ -1,15 +1,15 @@
 from __future__ import annotations
 import logging
 from typing import Any
-import voluptuous as vol # type: ignore[import]
+import voluptuous as vol
 
-from homeassistant import config_entries # type: ignore[import]
+from homeassistant import config_entries
 
 from .const import DOMAIN
 
 # Импорт локальной версии domru-client
-from domru_client import DomRuClient # type: ignore[import]
-from domru_client.exceptions import AuthenticationError, DataFetchError # type: ignore[import]
+from domru_client import DomRuClient
+from domru_client.exceptions import AuthenticationError, DataFetchError
 
 _LOGGER = logging.getLogger(__name__)
 
