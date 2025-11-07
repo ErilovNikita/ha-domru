@@ -138,7 +138,7 @@ class DomruConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
             # Успешная авторизация
             return self.async_create_entry(
-                title=f"Dom.ru ({client.phone})",
+                title=f"Учетная запись ({client.phone})",
                 data={
                     "phone": client.phone,
                     "auth_tokens": auth_dict

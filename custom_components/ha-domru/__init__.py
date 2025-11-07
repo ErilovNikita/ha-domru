@@ -63,7 +63,7 @@ class DomruDataUpdateCoordinator(DataUpdateCoordinator):
     async def _async_update_data(self):
         """Обновление данных с сервера Dom.ru."""
         try:
-            agreements = await self.hass.async_add_executor_job(self.client.get_agreements)
+            agreements:list[Agreement] = await self.hass.async_add_executor_job(self.client.get_agreements)
             _LOGGER.debug("Получено %s договоров", str(len(agreements)))
 
             # Загружаем подробности по каждому договору
