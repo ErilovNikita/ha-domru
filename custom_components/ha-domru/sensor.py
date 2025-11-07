@@ -56,6 +56,7 @@ class DomruAgreementBalanceSensor(DomruBaseSensor):
         super().__init__(coordinator, agreement_number)
         self._attr_name = "Баланс"
         self._attr_unique_id = f"{DOMAIN}_{agreement_number}_balance"
+        self._attr_icon = "mdi:currency-rub"
 
     @property
     def native_value(self):
@@ -75,6 +76,7 @@ class DomruAgreementTariffSensor(DomruBaseSensor):
         super().__init__(coordinator, agreement_number)
         self._attr_name = "Тариф"
         self._attr_unique_id = f"{DOMAIN}_{agreement_number}_tariff"
+        self._attr_icon = "mdi:tag"
         self._attr_native_unit_of_measurement = None
         self._attr_state_class = None
         self._attr_device_class = None
