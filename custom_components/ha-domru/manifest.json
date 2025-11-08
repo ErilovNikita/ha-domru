@@ -1,7 +1,7 @@
 {
   "domain": "domru",
   "name": "Dom RU",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "documentation": "https://github.com/ErilovNikita/ha-domru",
   "requirements": ["domru-client==1.0.9"],
   "codeowners": ["@minitwiks"],
