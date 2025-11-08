@@ -35,7 +35,6 @@ class DomruBaseSensor(CoordinatorEntity, SensorEntity):
     """Базовый класс для сенсоров Dom.ru с общим device_info."""
 
     def __init__(self, coordinator, agreement_number: str):
-        super().__init__(coordinator)
         self.agreement_number = agreement_number
         self._attr_device_info = {
             "identifiers": {(DOMAIN, agreement_number)},
@@ -43,6 +42,8 @@ class DomruBaseSensor(CoordinatorEntity, SensorEntity):
             "manufacturer": "Dom.ru",
             "model": "Договор",
         }
+
+        super().__init__(coordinator)
 
     @property
     def agreement_info(self):
@@ -53,14 +54,15 @@ class DomruAgreementBalanceSensor(DomruBaseSensor):
     """Сенсор баланса договора."""
 
     def __init__(self, coordinator, agreement_number: str):
-        super().__init__(coordinator, agreement_number)
         self._attr_unique_id = f"{DOMAIN}_{agreement_number}_balance"
         self._attr_name = "Баланс"
         self._attr_icon = "mdi:currency-rub"
 
+        super().__init__(coordinator, agreement_number)
+
     @property
     def native_value(self):
-        agreement_info:AgreementInfo = self.coordinator.data.get(self.agreement_number)
+        agreement_info:AgreementInfo = self.agreement_info()
         if agreement_info and agreement_info.payment:
             return agreement_info.payment.balance
         return None
@@ -73,7 +75,6 @@ class DomruAgreementTariffSensor(DomruBaseSensor):
     """Сенсор тарифа и платёжных данных."""
 
     def __init__(self, coordinator, agreement_number: str):
-        super().__init__(coordinator, agreement_number)
         self._attr_unique_id = f"{DOMAIN}_{agreement_number}_tariff"
         self._attr_name = "Тариф"
         self._attr_icon = "mdi:tag"
@@ -81,16 +82,18 @@ class DomruAgreementTariffSensor(DomruBaseSensor):
         self._attr_state_class = None
         self._attr_device_class = None
 
+        super().__init__(coordinator, agreement_number)
+
     @property
     def native_value(self):
-        agreement_info:AgreementInfo = self.coordinator.data.get(self.agreement_number)
+        agreement_info:AgreementInfo = self.agreement_info()
         if agreement_info and agreement_info.products:
             return agreement_info.products.tariff_name
         return "Неизвестно"
 
     @property
     def extra_state_attributes(self):
-        agreement_info:AgreementInfo = self.coordinator.data.get(self.agreement_number)
+        agreement_info:AgreementInfo = self.agreement_info()
         if agreement_info and agreement_info.payment and agreement_info.products:
             return {
                 "tariff_price": getattr(agreement_info.products, "tariff_price", None),
