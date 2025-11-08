@@ -42,13 +42,8 @@ class DomruBaseSensor(CoordinatorEntity, SensorEntity):
             "manufacturer": "Dom.ru",
             "model": "Договор",
         }
-
+        
         super().__init__(coordinator)
-
-    @property
-    def agreement_info(self):
-        """Возвращает AgreementInfo из координатора."""
-        return self.coordinator.data.get(self.agreement_number)
 
 class DomruAgreementBalanceSensor(DomruBaseSensor):
     """Сенсор баланса договора."""
@@ -62,7 +57,7 @@ class DomruAgreementBalanceSensor(DomruBaseSensor):
 
     @property
     def native_value(self):
-        agreement_info:AgreementInfo = self.agreement_info()
+        agreement_info:AgreementInfo = self.coordinator.data.get(self.agreement_number)
         if agreement_info and agreement_info.payment:
             return agreement_info.payment.balance
         return None
@@ -86,14 +81,14 @@ class DomruAgreementTariffSensor(DomruBaseSensor):
 
     @property
     def native_value(self):
-        agreement_info:AgreementInfo = self.agreement_info()
+        agreement_info:AgreementInfo = self.coordinator.data.get(self.agreement_number)
         if agreement_info and agreement_info.products:
             return agreement_info.products.tariff_name
         return "Неизвестно"
 
     @property
     def extra_state_attributes(self):
-        agreement_info:AgreementInfo = self.agreement_info()
+        agreement_info:AgreementInfo = self.coordinator.data.get(self.agreement_number)
         if agreement_info and agreement_info.payment and agreement_info.products:
             return {
                 "tariff_price": getattr(agreement_info.products, "tariff_price", None),
