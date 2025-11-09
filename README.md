@@ -9,7 +9,6 @@
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-green.svg)](https://github.com/custom-components/hacs)
 
 
-
 <p align="center" float="center" width="100%">
   <img src="docs/logo.png" width="30%" /> 
   <img src="docs/hass.png" width="30%" />
