@@ -3,7 +3,7 @@
   "name": "Dom RU",
   "version": "0.1.12",
   "documentation": "https://github.com/ErilovNikita/ha-domru",
-  "requirements": ["domru-client==1.0.9"],
+  "requirements": ["domru-client==1.0.10"],
   "codeowners": ["@minitwiks"],
   "config_flow": true
 }
