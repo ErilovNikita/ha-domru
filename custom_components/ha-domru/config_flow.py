@@ -7,7 +7,6 @@ from homeassistant import config_entries
 
 from .const import DOMAIN
 
-# Импорт локальной версии domru-client
 from domru_client import DomRuClient
 from domru_client.exceptions import AuthenticationError, DataFetchError
 
@@ -61,8 +60,15 @@ class DomruConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             region_index = user_input["Region"]
-            # Устанавливаем регион через executor
-            await self.hass.async_add_executor_job(client.set_region, regions[region_index])
+            selected_region = regions[region_index]
+            await self.hass.async_add_executor_job(client.set_region, selected_region)
+
+            self.region_dict = {
+                "name" : selected_region.name,
+                "domain" : selected_region.domain,
+                "provider_id" : selected_region.provider_id,
+                "has_sso" : 1
+            }
             return await self.async_step_otp()
 
         region_names = [r.name for r in regions]
@@ -141,7 +147,8 @@ class DomruConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 title=f"Учетная запись ({client.phone})",
                 data={
                     "phone": client.phone,
-                    "auth_tokens": auth_dict
+                    "auth_tokens": auth_dict,
+                    "region": self.region_dict
                 }
             )
 

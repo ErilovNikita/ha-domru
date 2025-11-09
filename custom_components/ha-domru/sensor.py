@@ -7,7 +7,7 @@ from homeassistant.components.sensor import SensorEntity
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from domru_client.types import AgreementInfo
+from domru_client.types import AgreementInfo, AgreementInfoPersonalAddress
 
 from .const import DOMAIN
 
@@ -35,12 +35,16 @@ class DomruBaseSensor(CoordinatorEntity, SensorEntity):
     """Базовый класс для сенсоров Dom.ru с общим device_info."""
 
     def __init__(self, coordinator, agreement_number: str):
+        agreement_info:AgreementInfo = coordinator.data.get(agreement_number)
+
         self.agreement_number = agreement_number
+        address:AgreementInfoPersonalAddress  = agreement_info.personal.address
+
         self._attr_device_info = {
             "identifiers": {(DOMAIN, agreement_number)},
             "name": f"Договор {agreement_number}",
-            "manufacturer": "Dom.ru",
-            "model": "Договор",
+            "manufacturer": agreement_info.personal.fio,
+            "model" : f"г. {address.city}, ул. {address.street}, д. {address.house}{address.building if address.building else ""}, кв. {address.flat}"
         }
         
         super().__init__(coordinator)
@@ -91,10 +95,10 @@ class DomruAgreementTariffSensor(DomruBaseSensor):
         agreement_info:AgreementInfo = self.coordinator.data.get(self.agreement_number)
         if agreement_info and agreement_info.payment and agreement_info.products:
             return {
-                "tariff_price": agreement_info.products.tariff_price.replace('&nbsp;', '') if agreement_info.products.tariff_price else None,
+                "tariff_price": getattr(agreement_info.products, "tariff_price", None),
                 "pay_sum": getattr(agreement_info.payment, "pay_sum", None),
                 "pay_charges_sum": getattr(agreement_info.payment, "pay_charges_sum", None),
-                "pay_text_short": getattr(agreement_info.payment, "pay_text_Short", None),
+                "pay_text_short": agreement_info.payment.pay_text_Short.replace('&nbsp;', '') if agreement_info.payment.pay_text_Short else None,
             }
         else:
             return {}
