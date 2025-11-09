@@ -18,7 +18,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     phone = entry.data["phone"]
     auth_dict = entry.data["auth_tokens"]
-    region_dict = entry.data["region_dict"]
+    region_dict = entry.data["region"]
 
     region = Region(**region_dict)
     auth_tokens = AuthTokens(**auth_dict)
