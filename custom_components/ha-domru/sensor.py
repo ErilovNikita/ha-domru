@@ -35,12 +35,13 @@ class DomruBaseSensor(CoordinatorEntity, SensorEntity):
     """Базовый класс для сенсоров Dom.ru с общим device_info."""
 
     def __init__(self, coordinator, agreement_number: str):
+        agreement_info:AgreementInfo = self.coordinator.data.get(self.agreement_number)
         self.agreement_number = agreement_number
         self._attr_device_info = {
             "identifiers": {(DOMAIN, agreement_number)},
             "name": f"Договор {agreement_number}",
-            "manufacturer": "Dom.ru",
-            "model": "Договор",
+            "manufacturer": agreement_info.personal.fio,
+            "model" : f"г. {agreement_info.personal.address.city}, ул. {agreement_info.personal.address.street}, д. {agreement_info.personal.address.house}, кв. {agreement_info.personal.address.flat}"
         }
         
         super().__init__(coordinator)
