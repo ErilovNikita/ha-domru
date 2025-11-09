@@ -7,7 +7,7 @@ from homeassistant.components.sensor import SensorEntity
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from domru_client.types import AgreementInfo
+from domru_client.types import AgreementInfo, AgreementInfoPersonalAddress
 
 from .const import DOMAIN
 
@@ -36,12 +36,16 @@ class DomruBaseSensor(CoordinatorEntity, SensorEntity):
 
     def __init__(self, coordinator, agreement_number: str):
         agreement_info:AgreementInfo = coordinator.data.get(agreement_number)
+
         self.agreement_number = agreement_number
+        address:AgreementInfoPersonalAddress  = agreement_info.personal.address
+        building_part = f", стр. {address.building}" if address.building else ""
+
         self._attr_device_info = {
             "identifiers": {(DOMAIN, agreement_number)},
             "name": f"Договор {agreement_number}",
             "manufacturer": agreement_info.personal.fio,
-            "model" : f"г. {agreement_info.personal.address.city}, ул. {agreement_info.personal.address.street}, д. {agreement_info.personal.address.house}, кв. {agreement_info.personal.address.flat}"
+            "model" : f"г. {address.city}, ул. {address.street}, д. {address.house}{building_part}, кв. {address.flat}"
         }
         
         super().__init__(coordinator)
