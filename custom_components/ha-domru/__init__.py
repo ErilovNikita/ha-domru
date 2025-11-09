@@ -8,7 +8,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 
 from .const import DOMAIN
 from domru_client import DomRuClient
-from domru_client.types import AuthTokens, Agreement
+from domru_client.types import AuthTokens, Agreement, Region
 from domru_client.exceptions import AuthenticationError, DataFetchError
 
 _LOGGER = logging.getLogger(__name__)
@@ -18,12 +18,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     phone = entry.data["phone"]
     auth_dict = entry.data["auth_tokens"]
+    region_dict = entry.data["region_dict"]
+
+    region = Region(**region_dict)
     auth_tokens = AuthTokens(**auth_dict)
+
     _LOGGER.debug("Настройка интеграции Dom.ru для %s", phone)
     _LOGGER.debug("Auth tokens: %s", auth_tokens)
 
-    # Создание клиента в executor (синхронный код)
+    # Создание клиента с нужным регионом
     client: DomRuClient = await hass.async_add_executor_job(DomRuClient, phone, auth_tokens)
+    await hass.async_add_executor_job(client.set_region, region)
 
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][entry.entry_id] = {"client": client}
