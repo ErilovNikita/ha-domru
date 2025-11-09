@@ -56,13 +56,16 @@ class DomruDataUpdateCoordinator(DataUpdateCoordinator):
             hass,
             _LOGGER,
             name="Dom.ru Data Coordinator",
-            update_interval=timedelta(minutes=1),
+            update_interval=timedelta(minutes=10),
         )
         self.client = client
 
     async def _async_update_data(self):
         """Обновление данных с сервера Dom.ru."""
         try:
+            # Обновление токена
+            await self.hass.async_add_executor_job(self.client.refresh_access_token)
+
             agreements:list[Agreement] = await self.hass.async_add_executor_job(self.client.get_agreements)
             _LOGGER.debug("Получено %s договоров", str(len(agreements)))
 
