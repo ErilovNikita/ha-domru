@@ -1,13 +1,12 @@
 {
   "domain": "domru",
   "name": "Dom RU",
-  "version": "v0.1.19",
+  "codeowners": ["@minitwiks"],
+  "config_flow": true,
   "documentation": "https://github.com/ErilovNikita/ha-domru",
   "issue_tracker": "https://github.com/ErilovNikita/ha-domru/issues",
+  "iot_class": "cloud_polling",
   "loggers": ["domru_client"],
   "requirements": ["domru-client==1.0.10"],
-  "integration_type": "hub",
-  "iot_class": "cloud_polling",
-  "codeowners": ["@minitwiks"],
-  "config_flow": true
+  "version": "v0.1.19"
 }
