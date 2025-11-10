@@ -1,0 +1,11 @@
+{
+  "domain": "domru",
+  "name": "Dom RU",
+  "codeowners": ["@minitwiks"],
+  "config_flow": true,
+  "documentation": "https://github.com/ErilovNikita/ha-domru",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/ErilovNikita/ha-domru/issues",
+  "requirements": ["domru-client==1.0.10"],
+  "version": "v0.1.19"
+}
