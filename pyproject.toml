@@ -1,0 +1,61 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ha-domru"
+version = "0.1.19"
+description = "Dom.ru integration for Home Assistant — provides data from Dom.ru cloud services."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+    { name = "Nikita Erilov", email = "erilovnikita@gmail.com" }
+]
+keywords = ["homeassistant", "domru", "integration", "smart-home"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Framework :: Home Assistant",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Home Automation",
+]
+
+dependencies = [
+    "domru-client==1.0.10",
+    "hacs-cli==0.4.3",
+    "homeassistant==2025.10.4"
+]
+
+[project.urls]
+Homepage = "https://github.com/ErilovNikita/ha-domru"
+Repository = "https://github.com/ErilovNikita/ha-domru"
+Issues = "https://github.com/ErilovNikita/ha-domru/issues"
+Documentation = "https://github.com/ErilovNikita/ha-domru#readme"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["custom_components/domru"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+
+[tool.isort]
+profile = "black"
+line_length = 100
+known_first_party = ["custom_components.domru"]
+skip = ["__init__.py"]
+
+[tool.hacs]
+name = "Dom.ru Integration"
+domain = "domru"
+country = "RU"
+homeassistant = "2025.10.0"
+persistent_directory = "custom_components/domru"
