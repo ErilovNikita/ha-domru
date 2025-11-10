@@ -10,8 +10,8 @@
 [![Russian](https://img.shields.io/badge/Docs-Russian-green.svg)](README.ru.md)
 
 <p align="center" float="center" width="100%">
-  <img src="docs/logo.png" width="30%" /> 
-  <img src="docs/hass.png" width="30%" />
+  <img src="https://github.com/home-assistant/brands/blob/master/custom_integrations/domru/icon.png?raw=true" style="padding: 40px" width="30%" /> 
+  <img src="https://github.com/home-assistant/brands/blob/master/core_integrations/_homeassistant/icon.png?raw=true" style="padding: 40px" width="30%" />
 </p>
 
 This integration allows you to query your Dom.Ru personal account.
