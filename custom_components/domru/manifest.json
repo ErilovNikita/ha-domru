@@ -1,8 +1,8 @@
 {
   "domain": "domru",
   "name": "Dom RU",
-  "codeowners": ["@minitwiks"],
   "config_flow": true,
+  "codeowners": ["@minitwiks"],
   "documentation": "https://github.com/ErilovNikita/ha-domru",
   "issue_tracker": "https://github.com/ErilovNikita/ha-domru/issues",
   "iot_class": "cloud_polling",
