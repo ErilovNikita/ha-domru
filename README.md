@@ -1,10 +1,7 @@
 # ha-domru
-> [!TIP]  
 > Интеграция Интернет-провайдера Дом.Ру для Home Assistant. Позволяющая видеть состояние лицевого счета по договорам из личного кабинета.
 
-> [!WARNING]  
-> Данная интеграция НЕ является официальной, и не пытается ей казаться. Данная интеграция разрабатывается исключительно в личных интересах, и использует только общедоступные endpoint'ы.
-
+![Latest Release](https://img.shields.io/github/v/release/ErilovNikita/ha-domru?label=Latest%20Release)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-green.svg)](https://github.com/custom-components/hacs)
 [![HACS Validate](https://github.com/ErilovNikita/ha-domru/actions/workflows/hacs-validate.yml/badge.svg)](https://github.com/ErilovNikita/ha-domru/actions/workflows/hacs-validate.yml)
@@ -15,10 +12,12 @@
   <img src="docs/hass.png" width="30%" />
 </p>
 
-
 Данная интеграция предоставляет возможность опрашивать личный кабинет Дом.Ру.
 
 На текущий момент имеется возможность получать основную информацию по договорам, подключенным в ЛК: Номер договора, Баланс, Тариф, и т.д.
+
+> [!WARNING]  
+> Данная интеграция является НЕ официальной, и не пытается ей казаться. Данная интеграция разрабатывается исключительно в личных интересах, и использует только общедоступные endpoint'ы.
 
 > [!IMPORTANT]  
 > Интеграция использует SSO авторизацию. Использование возможно, только если у вас в личном кабинете настроена авторизация по Номеру телефона и СМС. 
