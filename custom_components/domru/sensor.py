@@ -44,7 +44,7 @@ class DomruBaseSensor(CoordinatorEntity, SensorEntity):
             "identifiers": {(DOMAIN, agreement_number)},
             "name": f"Договор {agreement_number}",
             "manufacturer": agreement_info.personal.fio,
-            "model" : f"г. {address.city}, ул. {address.street}, д. {address.house}{address.building if address.building else ""}, кв. {address.flat}"
+            "model" : f"г. {address.city}, ул. {address.street}, д. {address.house}{address.building if address.building else ''}, кв. {address.flat}"
         }
         
         super().__init__(coordinator)
@@ -69,6 +69,19 @@ class DomruAgreementBalanceSensor(DomruBaseSensor):
     @property
     def native_unit_of_measurement(self):
         return "₽"
+    
+    @property
+    def extra_state_attributes(self):
+        agreement_info:AgreementInfo = self.coordinator.data.get(self.agreement_number)
+        if agreement_info and agreement_info.payment and agreement_info.products:
+            return {
+                "tariff_price": getattr(agreement_info.products, "tariff_price", None),
+                "pay_sum": getattr(agreement_info.payment, "pay_sum", None),
+                "pay_charges_sum": getattr(agreement_info.payment, "pay_charges_sum", None),
+                "pay_text_short": agreement_info.payment.pay_text_Short.replace('&nbsp;', '') if agreement_info.payment.pay_text_Short else None,
+            }
+        else:
+            return {}
 
 class DomruAgreementTariffSensor(DomruBaseSensor):
     """Сенсор тарифа и платёжных данных."""
@@ -89,16 +102,3 @@ class DomruAgreementTariffSensor(DomruBaseSensor):
         if agreement_info and agreement_info.products:
             return agreement_info.products.tariff_name
         return "Неизвестно"
-
-    @property
-    def extra_state_attributes(self):
-        agreement_info:AgreementInfo = self.coordinator.data.get(self.agreement_number)
-        if agreement_info and agreement_info.payment and agreement_info.products:
-            return {
-                "tariff_price": getattr(agreement_info.products, "tariff_price", None),
-                "pay_sum": getattr(agreement_info.payment, "pay_sum", None),
-                "pay_charges_sum": getattr(agreement_info.payment, "pay_charges_sum", None),
-                "pay_text_short": agreement_info.payment.pay_text_Short.replace('&nbsp;', '') if agreement_info.payment.pay_text_Short else None,
-            }
-        else:
-            return {}
