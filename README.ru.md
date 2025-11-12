@@ -2,9 +2,11 @@
 > Интеграция Интернет-провайдера Дом.Ру для Home Assistant. Позволяющая видеть состояние лицевого счета по договорам из личного кабинета.
 
 ![Latest Release](https://img.shields.io/github/v/release/ErilovNikita/ha-domru?label=Latest%20Release)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![hacs_badge](https://img.shields.io/badge/HACS-Default-green.svg)](https://github.com/custom-components/hacs)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![hacs_badge](https://img.shields.io/badge/HACS-Default-green.svg)](https://github.com/hacs/default)
 [![HACS Validate](https://github.com/ErilovNikita/ha-domru/actions/workflows/hacs-validate.yml/badge.svg)](https://github.com/ErilovNikita/ha-domru/actions/workflows/hacs-validate.yml)
+
+# Dom.ru Home Assistant Integration
 
 [![English](https://img.shields.io/badge/Docs-English-green.svg)](README.md)
 [![Russian](https://img.shields.io/badge/Docs-Russian-green.svg)](README.ru.md)
@@ -59,3 +61,5 @@ mv ha-domru /config/custom_components
 1. Заполните данные для авторизации в личном кабинете
 1. 🎉 Готово! 
 
+## License
+Данный проект лицензирован по лицензии Apache 2.0 — подробности см. в файле [LICENSE](ЛИЦЕНЗИЯ).

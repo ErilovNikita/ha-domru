@@ -2,8 +2,8 @@
 > Dom.Ru internet provider integration for Home Assistant. Allows you to view your account balance for contracts from your personal account.
 
 ![Latest Release](https://img.shields.io/github/v/release/ErilovNikita/ha-domru?label=Latest%20Release)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![hacs_badge](https://img.shields.io/badge/HACS-Default-green.svg)](https://github.com/custom-components/hacs)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![hacs_badge](https://img.shields.io/badge/HACS-Default-green.svg)](https://github.com/hacs/default)
 [![HACS Validate](https://github.com/ErilovNikita/ha-domru/actions/workflows/hacs-validate.yml/badge.svg)](https://github.com/ErilovNikita/ha-domru/actions/workflows/hacs-validate.yml)
 
 [![English](https://img.shields.io/badge/Docs-English-green.svg)](README.md)
@@ -59,3 +59,5 @@ mv ha-domru /config/custom_components
 1. Fill in your login information for your personal account.
 1. 🎉 Done!
 
+## License
+This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details.
