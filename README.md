@@ -59,3 +59,5 @@ mv ha-domru /config/custom_components
 1. Fill in your login information for your personal account.
 1. 🎉 Done!
 
+## License
+This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details.
