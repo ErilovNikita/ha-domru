@@ -24,6 +24,9 @@ This integration allows you to query your Dom.Ru personal account.
 
 Currently, you can obtain basic information on contracts connected to your personal account: Agreement Number, Balance, Tariff, etc.
 
+> [!CAUTION]
+> The integration is currently development and is not stable. Numerous issues and bugs may during use. Functionality limited depending on your authentication method or region. If you discover bugs please create `Issue` to expedite development process.
+
 > [!WARNING]  
 > This integration is NOT official, and does not pretend to be. This integration is being developed solely for personal use and uses only publicly available endpoints.
 
